@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.bmuschko.docker-spring-boot-application' version '4.10.0'
     id "com.diffplug.gradle.spotless" version "3.23.1"
     id "com.github.ben-manes.versions" version "0.21.0"
     id 'se.patrikerdes.use-latest-versions' version '0.2.10'
@@ -34,6 +35,15 @@ spotless {
     }
 }
 compileJava.dependsOn 'spotlessApply'
+
+docker {
+    springBootApplication {
+        baseImage = 'adoptopenjdk/openjdk11:alpine'
+        ports = [8080]
+        tag = "$project.name:$version"
+        jvmArgs = ['-Djava.security.egd=file:/dev/./urandom', '-Dspring.profiles.active=production', '-Xmx512m']
+    }
+}
 
 dependencies {
 
